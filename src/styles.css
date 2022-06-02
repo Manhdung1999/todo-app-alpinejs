@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    input{
+        @apply border;
+        @apply border-[#eeeeee];
+        @apply m-2;
+        @apply rounded;
+        @apply outline-0;
+    }
+    button{
+        @apply border;
+        @apply border-black;
+        @apply m-2;
+        @apply px-2;
+        @apply rounded;
+    }
+    select{
+        @apply border;
+        @apply outline-0;
+        @apply px-2;
+        @apply py-1;
+    }
+}

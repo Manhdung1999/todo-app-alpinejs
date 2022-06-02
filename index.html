@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="public/icon.css">
+    <script src="./public/main.js"></script>
+</head>
+
+<body class="relative bg-[#8f4df8]">
+    <div x-data="todoList()" class="mx-auto mobile:max-w-xl desktop:max-w-3xl mt-8 bg-white rounded-lg px-1 py-4" >
+        <h1 class="text-3xl text-center uppercase mb-4">To do List</h1>
+        <div  class="flex justify-center items-center">
+            <input x-model="todoNameInput" class="w-[12rem] px-4 py-2 border-2 color-[#828482] text-black" type="text" placeholder="Create your task here"  />
+            <input type="date" x-model="todoDateInput"  class="bg-white w-[7.5rem] py-2"/>
+            <select x-model="todoPriorityInput" class="w-[6rem] py-2.5 border bg-white rounded-md" >
+                <option>High</option>
+                <option>Normal</option>
+                <option>Low</option>
+            </select>
+            <button @click="addTodo" class="bg-[#8f4df8] border-0 px-8 text-white uppercase font-bold py-2">Add</button>
+        </div>
+        <div class="grid grid-cols-12 border mt-8 ">
+            <span class="text-center mobile:col-span-3 tablet:col-span-2 py-1 ">Name</span>
+            <span class="text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l" >Description</span>
+            <span class="text-center col-span-2 py-1 border-l mobile:hidden tablet:block" >Due Date</span>
+            <span class="text-center col-span-2 py-1 border-l" >Priority</span>
+            <span class="text-center col-span-2 py-1 border-l">Action</span>
+        </div>
+        <template x-for="todo in todos" :key="todo.id">
+        <ul  class="grid grid-cols-12 border border-t-0  ">
+            <li class=" text-center mobile:col-span-3 tablet:col-span-2 py-1" x-text="todo.name" ></li>
+            <li class=" text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l " x-text="todo.description" ></li>
+            <li class=" text-center col-span-2 py-1 border-l mobile:hidden tablet:block" x-text="todo.dueDate" ></li>
+            <li class=" text-center col-span-2 py-1 border-l" x-text="todo.priority" ></li>
+            <li class=" text-center col-span-2 py-1 border-l flex items-center justify-center gap-x-1">
+               <span @click = "setEditTodo(todo)"><i class="icon-edit text-[1.25rem]"></i></span>
+               <span @click = "deleteTodo(todo.id)"> <i class="icon-delete text-[1.25rem]"></i></span>
+            </li>
+        </ul>
+    </template>
+    </div>
+
+</body>
+<script src="public/script.js"></script>
+
+</html>
