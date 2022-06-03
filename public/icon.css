@@ -24,10 +24,46 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+  .icon-check:before {
+    content: "\e902";
+    color: #008000;
+  }
   .icon-edit:before {
     content: "\e900";
   }
   .icon-delete:before {
     content: "\e901";
+  }
+  .icon-sort .path1:before {
+    content: "\e903";
+    color: rgb(255, 0, 0);
+  }
+  .icon-sort .path2:before {
+    content: "\e904";
+    margin-left: -1em;
+    color: rgb(0, 128, 0);
+  }
+  .icon-sort .path3:before {
+    content: "\e905";
+    margin-left: -1em;
+    color: rgb(0, 0, 0);
+  }
+  .icon-sort .path4:before {
+    content: "\e906";
+    margin-left: -1em;
+    color: rgb(0, 0, 0);
+  }
+  .icon-sort .path5:before {
+    content: "\e907";
+    margin-left: -1em;
+    color: rgb(0, 0, 0);
+  }
+  .icon-sort .path6:before {
+    content: "\e908";
+    margin-left: -1em;
+    color: rgb(0, 0, 0);
+  }
+  .icon-search:before {
+    content: "\e909";
+    color: #fff;
   }

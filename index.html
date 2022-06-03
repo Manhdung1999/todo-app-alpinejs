@@ -1,50 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="public/style.css">
-    <link rel="stylesheet" href="public/icon.css">
+    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/icon.css" />
     <script src="./public/main.js"></script>
-</head>
-
-<body class="relative bg-[#8f4df8]">
-    <div x-data="todoList()" class="mx-auto mobile:max-w-xl desktop:max-w-3xl mt-8 bg-white rounded-lg px-1 py-4" >
-        <h1 class="text-3xl text-center uppercase mb-4">To do List</h1>
-        <div  class="flex justify-center items-center">
-            <input x-model="todoNameInput" class="w-[12rem] px-4 py-2 border-2 color-[#828482] text-black" type="text" placeholder="Create your task here"  />
-            <input type="date" x-model="todoDateInput"  class="bg-white w-[7.5rem] py-2"/>
-            <select x-model="todoPriorityInput" class="w-[6rem] py-2.5 border bg-white rounded-md" >
-                <option>High</option>
-                <option>Normal</option>
-                <option>Low</option>
-            </select>
-            <button @click="addTodo" class="bg-[#8f4df8] border-0 px-8 text-white uppercase font-bold py-2">Add</button>
+  </head>
+  <body class="relative bg-[#8f4df8]">
+    <div
+      x-data="todoList()"
+      x-init="defaultSort()"
+      class="mx-auto mobile:max-w-xl desktop:max-w-3xl mt-8 bg-white rounded-lg px-1 py-4"
+    >
+      <h1 class="text-3xl text-center uppercase mb-4">To do List</h1>
+      <div class="flex justify-center items-center gap-x-2">
+        <input
+          placeholder="Search todo here..."
+          class="py-1 px-2 focus:border-[#5585ed] focus:border"
+          x-model="inputSearchData"
+        />
+        <select
+          class="max-w-[8rem] h-[2.125rem] border bg-white rounded-md text-center"
+          x-model="selectSearchData"
+        >
+          <option>Name</option>
+          <option>Description</option>
+        </select>
+        <button
+          @click="handleSearchTodo()"
+          class="bg-[#04aa6d] px-4 py-1 border-0 text-white hover:opacity-90"
+        >
+          Search <span> </span>
+        </button>
+      </div>
+      <div class="flex justify-center items-center">
+        <input
+          x-model="todoNameInput"
+          class="w-[12rem] px-4 py-2 border-2 color-[#828482] text-black focus:border-[#5585ed]"
+          type="text"
+          placeholder="Create your task here"
+        />
+        <input
+          type="date"
+          x-model="todoDateInput"
+          class="bg-white w-[7.5rem] py-2"
+        />
+        <select
+          x-model="todoPriorityInput"
+          class="w-[6rem] py-2.5 border bg-white rounded-md text-center"
+        >
+          <option>High</option>
+          <option>Normal</option>
+          <option>Low</option>
+        </select>
+        <button
+          @click="addTodo"
+          class="bg-[#8f4df8] border-0 px-8 text-white uppercase font-bold py-2 hover:opacity-90"
+        >
+          Add
+        </button>
+      </div>
+      <div class="grid grid-cols-12 border mt-8">
+        <span
+          class="text-center mobile:col-span-3 tablet:col-span-2 py-1 flex items-center justify-center gap-x-2"
+          >Name
+          <span @click="sortByName" class="icon-sort cursor-pointer text-[1.25rem]"
+            ><span class="path1"></span><span class="path2"></span
+            ><span class="path3"></span><span class="path4"></span
+            ><span class="path5"></span><span class="path6"></span></span
+        ></span>
+        <span
+          class="text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l flex items-center justify-center gap-x-2"
+          >Description
+          <span @click="sortByDescription" class="icon-sort cursor-pointer text-[1.25rem]"
+            ><span class="path1"></span><span class="path2"></span
+            ><span class="path3"></span><span class="path4"></span
+            ><span class="path5"></span><span class="path6"></span
+          ></span>
+        </span>
+        <span
+          class="text-center col-span-2 py-1 border-l mobile:hidden tablet:flex items-center justify-center gap-x-2"
+          >Due Date
+          <span @click="sortByDueDate" class="icon-sort cursor-pointer text-[1.25rem]"
+            ><span class="path1"></span><span class="path2"></span
+            ><span class="path3"></span><span class="path4"></span
+            ><span class="path5"></span><span class="path6"></span></span
+        ></span>
+        <span
+          class="text-center col-span-2 py-1 border-l flex items-center justify-center gap-x-2"
+          >Priority
+          <span @click="sortByPriority" class="icon-sort cursor-pointer text-[1.25rem]"
+            ><span class="path1"></span><span class="path2"></span
+            ><span class="path3"></span><span class="path4"></span
+            ><span class="path5"></span><span class="path6"></span></span
+        ></span>
+        <span class="text-center col-span-2 py-1 border-l">Action</span>
+      </div>
+      <template x-for="todo in todos" :key="todo.id">
+        <div>
+          <template x-if="editTodo.id !== todo.id">
+            <ul
+              class="grid grid-cols-12 border border-t-0"
+              :class="{'bg-gradient-to-r from-[#e6dd40] to-white': todo.priority === 'Low','bg-gradient-to-r from-[#f2665c] to-white': todo.priority === 'High','bg-gradient-to-r from-[#4ef207] to-white': todo.priority === 'Normal' }"
+            >
+              <li
+                class="text-center mobile:col-span-3 tablet:col-span-2 py-1"
+                x-text="todo.name"
+              ></li>
+              <li
+                class="text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l"
+                x-text="todo.description"
+              ></li>
+              <li
+                class="text-center col-span-2 py-1 border-l mobile:hidden tablet:block"
+                x-text="convertDate(todo.dueDate)"
+              ></li>
+              <li
+                class="text-center col-span-2 py-1 border-l"
+                x-text="todo.priority"
+              ></li>
+              <li
+                class="text-center col-span-2 py-1 border-l flex items-center justify-center gap-x-2"
+              >
+                <span class="cursor-pointer" @click="setEditTodo(todo)"
+                  ><i class="icon-edit text-[1.25rem]"></i
+                ></span>
+                <span class="cursor-pointer" @click="deleteTodo(todo.id)">
+                  <i class="icon-delete text-[1.25rem]"></i
+                ></span>
+              </li>
+            </ul>
+          </template>
+          <template x-if="editTodo.id === todo.id">
+            <ul class="grid grid-cols-12 border border-t-0">
+              <li class="text-center mobile:col-span-3 tablet:col-span-2 py-1">
+                <input x-model="editTodo.name" class="w-4/5 text-center" />
+              </li>
+              <li
+                class="text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l flex items-center justify-center"
+              >
+                <textarea
+                  x-model="editTodo.description"
+                  class="w-4/5 border outline-0"
+                ></textarea>
+              </li>
+              <li
+                class="text-center col-span-2 py-1 border-l mobile:hidden tablet:flex items-center justify-center"
+              >
+                <input
+                  type="date"
+                  x-model="editTodo.dueDate"
+                  class="bg-white max-w-[7.5rem] m-0"
+                />
+              </li>
+              <li
+                class="text-center col-span-2 py-1 border-l flex items-center justify-center"
+              >
+                <select
+                  x-model="editTodo.priority"
+                  class="max-w-[5.75rem] py-2.5 border bg-white rounded-md text-center"
+                >
+                  <option>High</option>
+                  <option>Normal</option>
+                  <option>Low</option>
+                </select>
+              </li>
+              <li
+                class="text-center col-span-2 py-1 border-l flex items-center justify-center gap-x-1"
+              >
+                <span @click="handleEditTodo()"
+                  ><i class="icon-check text-[1.25rem]"></i
+                ></span>
+                <span @click="deleteTodo(todo.id)">
+                  <i class="icon-delete text-[1.25rem]"></i
+                ></span>
+              </li>
+            </ul>
+          </template>
         </div>
-        <div class="grid grid-cols-12 border mt-8 ">
-            <span class="text-center mobile:col-span-3 tablet:col-span-2 py-1 ">Name</span>
-            <span class="text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l" >Description</span>
-            <span class="text-center col-span-2 py-1 border-l mobile:hidden tablet:block" >Due Date</span>
-            <span class="text-center col-span-2 py-1 border-l" >Priority</span>
-            <span class="text-center col-span-2 py-1 border-l">Action</span>
-        </div>
-        <template x-for="todo in todos" :key="todo.id">
-        <ul  class="grid grid-cols-12 border border-t-0  ">
-            <li class=" text-center mobile:col-span-3 tablet:col-span-2 py-1" x-text="todo.name" ></li>
-            <li class=" text-center mobile:col-span-5 tablet:col-span-4 py-1 border-l " x-text="todo.description" ></li>
-            <li class=" text-center col-span-2 py-1 border-l mobile:hidden tablet:block" x-text="todo.dueDate" ></li>
-            <li class=" text-center col-span-2 py-1 border-l" x-text="todo.priority" ></li>
-            <li class=" text-center col-span-2 py-1 border-l flex items-center justify-center gap-x-1">
-               <span @click = "setEditTodo(todo)"><i class="icon-edit text-[1.25rem]"></i></span>
-               <span @click = "deleteTodo(todo.id)"> <i class="icon-delete text-[1.25rem]"></i></span>
-            </li>
-        </ul>
-    </template>
+      </template>
     </div>
-
-</body>
-<script src="public/script.js"></script>
-
+  </body>
+  <script src="public/script.js"></script>
 </html>
