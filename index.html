@@ -43,15 +43,18 @@
           class="w-[12rem] px-4 py-2 border-2 color-[#828482] text-black focus:border-[#5585ed]"
           type="text"
           placeholder="Create your task here"
+          @keyup.enter = "addTodo"
         />
         <input
           type="date"
           x-model="todoDateInput"
           class="bg-white w-[7.5rem] py-2"
+          @keyup.enter = "addTodo"
         />
         <select
           x-model="todoPriorityInput"
           class="w-[6rem] py-2.5 border bg-white rounded-md text-center"
+          @keyup.enter = "addTodo"
         >
           <option>High</option>
           <option>Normal</option>
