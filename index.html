@@ -21,20 +21,21 @@
           placeholder="Search todo here..."
           class="py-1 px-2 focus:border-[#5585ed] focus:border"
           x-model="inputSearchData"
+          @keyup="handleSearchTodo(inputSearchData)"
         />
-        <select
+        <!-- <select
           class="max-w-[8rem] h-[2.125rem] border bg-white rounded-md text-center"
           x-model="selectSearchData"
         >
           <option>Name</option>
           <option>Description</option>
-        </select>
-        <button
+        </select> -->
+        <!-- <button
           @click="handleSearchTodo()"
           class="bg-[#04aa6d] px-4 py-1 border-0 text-white hover:opacity-90"
         >
-          Search <span> </span>
-        </button>
+          Search
+        </button> -->
       </div>
       <div class="flex justify-center items-center">
         <input

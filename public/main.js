@@ -14,6 +14,7 @@ function todoList() {
     inputSearchData:'',
     selectSearchData:'Name',
     todos: JSON.parse(localStorage.getItem("data")) || [],
+    timeout : null,
     convertDate(date) {
       let dd = new Date(date).getDate();
       let mm = new Date(date).getMonth() + 1;
@@ -172,13 +173,12 @@ function todoList() {
       }
     },
     handleSearchTodo(){
-        this.todos = JSON.parse(localStorage.getItem("data")) || [];
-        if(this.selectSearchData === 'Name') {
-            this.todos = this.todos.filter(todo => todo.name.includes(this.inputSearchData));
-        }else{
-            this.todos = this.todos.filter(todo => todo.description.includes(this.inputSearchData));
-        }
-        this.inputSearchData = ''
-    }
+      clearTimeout(this.timeout);
+      const _this = this;
+      this.timeout = setTimeout(function () {
+        _this.todos = JSON.parse(localStorage.getItem("data")) || [];
+        _this.todos = _this.todos.filter(todo => todo.name.includes(_this.inputSearchData)|| todo.description.includes(_this.inputSearchData));
+    }, 300);  
+    },
   };
 }
